@@ -15,17 +15,39 @@ backgroundLayer4.src = 'images/layer-4.png'
 const backgroundLayer5 = new Image()
 backgroundLayer5.src = 'images/layer-5.png'
 
-let x = 0;
-let x2 = 2400;
-function animate(){
-    ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT)
-    ctx.drawImage(backgroundLayer4, x, 0)
-    ctx.drawImage(backgroundLayer4, x2, 0)
-    if (x < -2400) x = 2400 - gameSpeed;
-    else x -= gameSpeed;
-    if (x2 < -2400) x2 = 2400 - gameSpeed;
-    else x2 -= gameSpeed;
-    requestAnimationFrame(animate)
+class Layer{ 
+    constructor(image, speedModifier){
+        // "this" means =  the current object within the scope
+        this.x = 0;
+        this.y = 0; 
+        this.width = 2400; 
+        this.height = 700; 
+        this.x2 = this.width;
+        this.image = image; 
+        this.speedModifier = speedModifier;
+        this.speed = gameSpeed * this.speedModifier;
+    }
+    update(){
+        this.speed = gameSpeed * this.speedModifier; 
+        if (this.x <= this.width){
+            this.x = this.width + this.x2 - this.speed;
+        }
+        if (this.x2 <= this.width){
+            this.x2 = this.width + this.x - this.speed;
+        }
+        this.x = Math.floor(this.x - this.speed)
+        this.x2 = Math.floor(this.x2 - this.speed)
+    }
+    draw(){
+        ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
+        ctx.drawImage(this.image, this.x2, this.y, this.width, this.height);
+    }
+    
 }
 
+function animate(){
+    ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT)
+    requestAnimationFrame(animate)
+}
+ 
 animate()
